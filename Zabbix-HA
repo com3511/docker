@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+  zabbix-server-1:
+    image: zabbix/zabbix-server
+    container_name: zabbix-server-1
+    environment:
+      - ZBX_AUTOHANODENAME=zabbix-server-1
+      - ZBX_SERVER_ACTIVE=1
+      - ZBX_SERVER_PORT=10051
+    volumes:
+      - /path/to/mount/point:/var/lib/zabbix
+      - ./zabbix-conf:/etc/zabbix
+  zabbix-server-2:
+    image: zabbix/zabbix-server
+    container_name: zabbix-server-2
+    environment:
+      - ZBX_AUTOHANODENAME=zabbix-server-2
+      - ZBX_SERVER_ACTIVE=0
+      - ZBX_SERVER_PORT=10052
+    volumes:
+      - /path/to/mount/point:/var/lib/zabbix
+      - ./zabbix-conf:/etc/zabbix
+  haproxy:
+    image: haproxy
+    container_name: haproxy
+    ports:
+      - 80:80
+    volumes:
+      - ./haproxy.cfg:/etc/haproxy/haproxy.cfg
+
+networks:
+  default:
+    external: true
